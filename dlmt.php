@@ -1,34 +1,34 @@
 <?php
 
-ini_set('display_errors',1); 
-error_reporting( -1 );
-
-
 /**
  * Function which shows time diff in human-friendly form
  *
  * Credit: CSS-tricks.com
  */
 
-function time_since( $time ) {
+if ( ! function_exists( 'human_time_diff' ) ) {
+	if ( ! function_exists( 'time_since' ) ) {
+		function time_since( $time ) {
 	
-	$periods = array( "second", "minute", "hour", "day", "week", "month", "year", "decade" );
-	$lengths = array( "60","60","24","7","4.35","12","10" );
+			$periods = array( "second", "minute", "hour", "day", "week", "month", "year", "decade" );
+			$lengths = array( "60","60","24","7","4.35","12","10" );
 
-	$now = time();
+			$now = time();
 
-	$difference = $now - $time;
-	$tense = "ago";
+			$difference = $now - $time;
+			$tense = "ago";
 
-	for ( $j = 0; $difference >= $lengths[$j] && $j < count( $lengths ) - 1; $j++ )
-		$difference /= $lengths[$j];
+			for ( $j = 0; $difference >= $lengths[$j] && $j < count( $lengths ) - 1; $j++ )
+				$difference /= $lengths[$j];
 
-	$difference = round( $difference );
+			$difference = round( $difference );
 
-	if ( $difference != 1 )
-		$periods[$j].= "s";
+			if ( $difference != 1 )
+				$periods[$j].= "s";
 	
-	return "$difference $periods[$j] ago";
+			return "$difference $periods[$j] ago";
+		}
+	}
 }
 
 
@@ -40,10 +40,6 @@ function dlmt( $path = '' ) {
 	
 	$files = scandir( $path );
 	
-	echo'<pre>';
-	print_r($files);
-	echo'</pre>';
-		
 	$timestamp = array();
 	
 	// read last modified time of all files
@@ -52,16 +48,10 @@ function dlmt( $path = '' ) {
 			$timestamp[$file] = filemtime( $path . $file );
 	}
 	
-	echo'<pre>';
-	print_r($timestamp);
-	echo'</pre>';
-	
 	$most_fresh_file_time = max( $timestamp );
 	
-	echo time_since( $most_fresh_file_time );
+	if ( ! function_exists( 'human_time_diff' ) )
+		return time_since( $most_fresh_file_time );
+	else
+		return human_time_diff( $most_fresh_file_time );
 }
-
-dlmt( '/home/ashfame/www/git/' );
-
-
-
