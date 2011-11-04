@@ -1,4 +1,4 @@
-PHP Code to track when was the last time a directory was modified. I needed this to show how long was the staging server updated.
+PHP Code to track when was the last time a directory was modified. I needed this to show how long ago was the staging server updated.
 
 Call dlmt() with path as argument to it which you would like to monitor, for eg: themes folder in my case
 
