@@ -1,59 +1,54 @@
 <?php
 
-function dlmt( $path = '' ) {
-	// open the directory handler
-	$dir_handler = opendir( $path );
-	
-	// collect filenames
-	while( $file = readdir( $dir_handler ) )
-		if ( $file != '.' && $file != '..' )
-			$files[] = $file;
-	
-	// close handler
-	closedir($handler);
-	
-	$timestamp = array();
-	
-	// read last modified time of all files
-	foreach ( $files as $file ) {
-		$timestamp[$file] = filemtime( $file );
-	}
-	
-	$most_fresh_file_time = max( $timestamp );
-	
-	echo human_time_diff( $most_fresh_file_time );
-}
+ini_set('display_errors',1); 
+error_reporting( -1 );
 
 
 /**
  * Function which shows time diff in human-friendly form
- *
- * Credit: WordPress
  */
 
-function human_time_diff( $from, $to = '' ) {
-	if ( empty($to) )
-		$to = time();
-	$diff = (int) abs($to - $from);
-	if ($diff <= 3600) {
-		$mins = round($diff / 60);
-		if ($mins <= 1) {
-			$mins = 1;
-		}
-		/* translators: min=minute */
-		$since = sprintf(_n('%s min', '%s mins', $mins), $mins);
-	} else if (($diff <= 86400) && ($diff > 3600)) {
-		$hours = round($diff / 3600);
-		if ($hours <= 1) {
-			$hours = 1;
-		}
-		$since = sprintf(_n('%s hour', '%s hours', $hours), $hours);
-	} elseif ($diff >= 86400) {
-		$days = round($diff / 86400);
-		if ($days <= 1) {
-			$days = 1;
-		}
-		$since = sprintf(_n('%s day', '%s days', $days), $days);
+function time_since( $time )
+{
+	$periods = array( "second", "minute", "hour", "day", "week", "month", "year", "decade" );
+	$lengths = array( "60","60","24","7","4.35","12","10" );
+
+	$now = time();
+
+	$difference = $now - $time;
+	$tense = "ago";
+
+	for ( $j = 0; $difference >= $lengths[$j] && $j < count( $lengths ) - 1; $j++ ) {
+		$difference /= $lengths[$j];
 	}
-	return $since;
+
+	$difference = round( $difference );
+
+	if ( $difference != 1 )
+		$periods[$j].= "s";
+	
+	return "$difference $periods[$j] 'ago' ";
 }
+
+
+function dlmt( $path = '' ) {
+	
+	$files = scandir( $path );
+		
+	$timestamp = array();
+	
+	// read last modified time of all files
+	foreach ( $files as $file ) {
+		if ( $file != '.' && $file != '..' )
+			$timestamp[$file] = filemtime( $path . $file );
+	}
+	
+	$most_fresh_file_time = max( $timestamp );
+	
+	echo time_since( $most_fresh_file_time );
+}
+
+dlmt( '/home/ashfame/www/git/' );
+
+
+
