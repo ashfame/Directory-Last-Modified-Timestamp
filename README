@@ -2,4 +2,6 @@ PHP Code to track when was the last time a directory was modified. I needed this
 
 Call dlmt() with path as argument to it which you would like to monitor, for eg: themes folder in my case
 
-dlmt( '/home/ashfame/www/git/' );
+Normal usage: `echo dlmt( '/home/ashfame/www/git/' );`
+
+WordPress usage: To moniot theme, drop the code in functions.php & use it like `echo dlmt( trailingslashit( dirname( __FILE__ ) );`
