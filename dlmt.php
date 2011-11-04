@@ -48,7 +48,7 @@ function dlmt( $path = '' ) {
 	
 	// read last modified time of all files
 	foreach ( $files as $file ) {
-		if ( $file != '.' && $file != '..' && is_file( $path . $file ) )
+		if ( $file != '.' && $file != '..' )
 			$timestamp[$file] = filemtime( $path . $file );
 	}
 	
